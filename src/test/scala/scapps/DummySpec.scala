@@ -9,7 +9,7 @@ import org.scalatest.matchers.ShouldMatchers
 class DummySpec extends BaseSuite {
   
   test("dummy") {
-    true should equal (false)
+    true should equal (true)
   }
 }
 
