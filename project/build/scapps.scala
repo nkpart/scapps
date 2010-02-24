@@ -10,4 +10,5 @@ class ScappsProject(info: ProjectInfo) extends DefaultProject(info) {
   val scalaz_http = "com.googlecode.scalaz" % "scalaz-http_2.8.0.Beta1" % "5.0-SNAPSHOT"
   
   val belt = "prohax" %% "belt" % "0.1"
+  val hprops = "nkpart" %% "hprops" % "0.1"
 }
