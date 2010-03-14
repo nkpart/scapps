@@ -9,11 +9,9 @@ import Scalaz._
 import org.scalatest._
 import org.scalatest.matchers.ShouldMatchers
 
-class HPropsSpec extends SageSuiteBase {
-  import sage.http._
+class HPropsSpec extends BaseSuite {
   import scalaz.http._
   import request._
-  import StringW._
   
   def r(qs: String) = {
     val line = Line.line(GET, Uri.uri("/abc".charsNel.get, some(qs.toList)), Version.version11)    
@@ -30,18 +28,18 @@ class HPropsSpec extends SageSuiteBase {
   
   test("reading") {
     val request = r("name=nick")
-    nameProp.get(request).success should equal (some(Name("nick")))
+    nameProp.read(request).success should equal (some(Name("nick")))
   }
   
   test ("missing") {
     val request = r("name=nick")
-    nameAndAgeProp.get(request).failure.map(_.list) should equal (some(Missing("age") :: Missing("song") :: Nil))
+    nameAndAgeProp.read(request).failure.map(_.list) should equal (some(Missing("age") :: Missing("song") :: Nil))
   }
   
   test ("invalid") {
     // TODO
     val request = r("name=nick&age=five")
-    personProp.get(request).failure.map(_.list) should equal {
+    personProp.read(request).failure.map(_.list) should equal {
       some(Invalid("age") :: Nil)
     }
   }
@@ -49,7 +47,7 @@ class HPropsSpec extends SageSuiteBase {
   test("updating") {
     val start = Record("nick", "four", "song1")
     
-    nameAndAgeProp.put(r("song=song2"), start) should equal {
+    nameAndAgeProp.update(r("song=song2"), start) should equal {
       success(Record("nick", "four", "song2"))
     }
   }
@@ -60,7 +58,7 @@ class HPropsSpec extends SageSuiteBase {
   test("updating invalid") {
     val start = Rect(0, 0, 25, 25)
     
-    RectProp.put(r("width=fifteen&height=eighteen"), start).fail.map(_.list).validation should equal {
+    RectProp.update(r("width=fifteen&height=eighteen"), start).fail.map(_.list).validation should equal {
       failure(Invalid("width") :: Invalid("height") :: Nil)
     }
   }

@@ -14,7 +14,7 @@ package scapps {
   }
 }
 
-package object scapps extends RequestImplicits {
+package object scapps extends RequestImplicits with StringImplicits {
   type Around[T] = (=> T) => T
 
   implicit def AroundMonoid[T] = new scalaz.Semigroup[Around[T]] {
@@ -44,5 +44,5 @@ package object scapps extends RequestImplicits {
 
   def at(parts: List[String]) = whenR(_.parts == parts)
 
-  def at(s: String*) = whenR(_.parts == s.toList)
+  def at(s: String*): Kleisli[Option, Request, Request] = at(s.toList)
 }

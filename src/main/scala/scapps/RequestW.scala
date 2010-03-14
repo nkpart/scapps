@@ -12,7 +12,7 @@ trait RequestW {
 
   def update[T](t: T)(implicit postable: RequestUpdate[T]) = postable.update(request)(t)
   
-  def formBase(e: List[(String, String)]) = new FormBase {
+  def formBase(e: List[(String, String)] = Nil) = new FormBase {
     val errors = e
     val previous = ((key: String) => (request(key)) map (_.mkString))
   }

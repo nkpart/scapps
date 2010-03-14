@@ -14,13 +14,14 @@ trait PostBase[T] extends RequestCreate[T] with RequestUpdate[T] with scapps.Val
       errs map {
         case hprops.Missing(s) => (s, Required format s)
         case hprops.Invalid(s) => (s, Required format s)
+        case hprops.CustomError(f, s) => (f, s)
       }
     }.validation
   }
   
-  def create(r: Request) = handleErrors(this.*.get(r.underlying))
+  def create(r: Request) = handleErrors(this.*.read(r.underlying))
   
-  def update(r: Request)(t: T) = handleErrors(this.*.put(r.underlying, t)).fold(
+  def update(r: Request)(t: T) = handleErrors(this.*.update(r.underlying, t)).fold(
     {err => (err.list, t)},
     { t => (Nil, t) }
   )
